@@ -7,3 +7,15 @@ chrome.runtime.onMessage.addListener(function (msg, sender, sendResponse) {
     sendResponse("Color message is none.");
   }
 });
+
+document.addEventListener("click", (e) => {
+  console.log("YOU CLICKED");
+})
+
+document.addEventListener("keypress", (e) => {
+  console.log("YOU PRESSED");
+});
+
+document.addEventListener("scroll", (e) => {
+  console.log("YOU SCROLLED");
+});
