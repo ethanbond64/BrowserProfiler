@@ -1,6 +1,22 @@
+
+
+
+const getAndLog = async (key: string) => {
+  chrome.storage.local.get([key]).then((result) => console.log(result));
+};
+
+
+const report = () => {
+  console.log("reporting...")
+  getAndLog("clicks");
+  getAndLog("keypresses");
+  getAndLog("scrolls");
+};
+
 function polling() {
   console.log("polling");
-  setTimeout(polling, 1000 * 30);
+  report();
+  setTimeout(polling, 1000 * 5);
 }
 
 polling();
