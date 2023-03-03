@@ -6,11 +6,18 @@ const getAndLog = async (key: string) => {
 };
 
 
+const getLogAndClear = async (key: string) => {
+  chrome.storage.local.get([key]).then((result) => {
+    console.log(result);
+  });
+  chrome.storage.local.set({ [key]: 0 });
+};
+
 const report = () => {
   console.log("reporting...")
-  getAndLog("clicks");
-  getAndLog("keypresses");
-  getAndLog("scrolls");
+  getLogAndClear("clicks");
+  getLogAndClear("keypresses");
+  getLogAndClear("scrolls");
 };
 
 function polling() {
