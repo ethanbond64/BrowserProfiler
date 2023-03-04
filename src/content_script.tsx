@@ -1,19 +1,20 @@
 import NumberStorage from "./Storage/NumberStorage";
+import { executeSafe } from "./Utils";
 
 const numberStorage = new NumberStorage();
 
 document.addEventListener("click", (e) => {
-  // console.log("YOU CLICKED");
-  numberStorage.increment("clicks");
+  console.log("YOU CLICKED");
+  executeSafe(() => numberStorage.increment("clicks"));
 })
 
 document.addEventListener("keydown", (e) => {
   // console.log("YOU PRESSED");
-  numberStorage.increment("keydowns");
+  executeSafe(() => numberStorage.increment("keydowns"));
 });
 
 document.addEventListener("scroll", (e) => {
   // console.log("YOU SCROLLED");
-  numberStorage.increment("scrolls");
+  executeSafe(() => numberStorage.increment("scrolls"));
 });
 
