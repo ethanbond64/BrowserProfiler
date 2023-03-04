@@ -35,6 +35,18 @@ export const getProfileLogs = async (): Promise<ProfileLog> => {
     });
 };
 
+export const evaluateProfileLogs = async (evalFunction: Function): Promise<boolean> => {
+    return new Promise((resolve, reject) => {
+        chrome.storage.local.get([PROFILE_LOG], function (result) {
+            if (result[PROFILE_LOG] === undefined) {
+                reject();
+            } else {
+                resolve(evalFunction(result[PROFILE_LOG]));
+            }
+        });
+    });
+}
+
 // export const logProfileLogs = async () => {
 //     chrome.storage.local.get(PROFILE_LOG).then((result) => {
 //         console.log(result);

@@ -1,7 +1,9 @@
 import { appendStorageArray, getAndClear, getAndClearArray, getLogAndClear } from "./bufferStorage";
-import { addProfileLog } from "./loggingStorage";
+import { addProfileLog, evaluateProfileLogs } from "./loggingStorage";
 import { ActivityLevel, ProfileLog } from "./profileLog";
 
+const HEARTBEAT = 5;
+const SLEEP = 10;
 
 const report = async () => {
   console.log("reporting...")
@@ -35,17 +37,23 @@ const getActivityLevel = (clicks: number, keys: number, scrolls: number): Activi
 
 function reportPoll() {
   report();
-  setTimeout(reportPoll, 1000 * 5);
+  evaluateProfileLogs((profileLogs: ProfileLog[]) => {
+    console.log("evaluating profile logs", profileLogs);
+    if (profileLogs.length < SLEEP) {
+      setTimeout(reportPoll, HEARTBEAT * 1000);
+    }
+
+    if (!profileLogs.slice(-SLEEP).every((profileLog: ProfileLog) => {
+      return profileLog.activityLevel === ActivityLevel.Idle;
+    })) {
+      setTimeout(reportPoll, HEARTBEAT * 1000);
+    }
+
+  });
+
 }
 
 reportPoll();
-
-function logPoll() {
-  // logProfileLogs();
-  setTimeout(logPoll, 1000 * 30);
-}
-
-logPoll();
 
 
 
