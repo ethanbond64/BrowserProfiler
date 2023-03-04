@@ -1,6 +1,6 @@
-import BufferStorage from "./BufferStorage";
+import TypedStorage from "./TypedStorage";
 
-export default class NumberStorage implements BufferStorage<number> {
+export default class NumberStorage implements TypedStorage<number> {
 
     private _default: number;
 

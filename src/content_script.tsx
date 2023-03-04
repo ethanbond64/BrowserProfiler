@@ -1,4 +1,3 @@
-import { incrementStorageValue } from "./bufferStorage";
 import NumberStorage from "./Storage/NumberStorage";
 
 const numberStorage = new NumberStorage();

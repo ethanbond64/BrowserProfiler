@@ -1,7 +1,7 @@
 
-import BufferStorage from "./BufferStorage";
+import TypedStorage from "./TypedStorage";
 
-export default class ArrayStorage implements BufferStorage<[]> {
+export default class ArrayStorage implements TypedStorage<[]> {
 
     private _default: number;
 

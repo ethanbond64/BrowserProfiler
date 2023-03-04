@@ -1,6 +1,6 @@
 
 
-export default interface BufferStorage<T> {
+export default interface TypedStorage<T> {
 
     //
     // Get the value stored at the given key.

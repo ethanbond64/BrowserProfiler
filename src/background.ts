@@ -1,16 +1,21 @@
-import { appendStorageArray, getAndClear, getAndClearArray, getLogAndClear } from "./bufferStorage";
 import { addProfileLog, evaluateProfileLogs } from "./loggingStorage";
 import { ActivityLevel, ProfileLog } from "./profileLog";
+import ArrayStorage from "./Storage/ArrayStorage";
+import NumberStorage from "./Storage/NumberStorage";
 
 const HEARTBEAT = 5;
 const SLEEP = 10;
 
+const numberStorage = new NumberStorage();
+const arrayStorage = new ArrayStorage();
+
 const report = async () => {
+
   console.log("reporting...")
-  let clicks = await getAndClear("clicks");
-  let keydowns = await getAndClear("keydowns");
-  let scrolls = await getAndClear("scrolls");
-  let urls = await getAndClearArray("urls");
+  let clicks = await numberStorage.pop("clicks");
+  let keydowns = await numberStorage.pop("keydowns");
+  let scrolls = await numberStorage.pop("scrolls");
+  let urls = await arrayStorage.pop("urls");
 
   console.log("reporting... " + clicks + " " + keydowns + " " + scrolls + " " + urls);
 
@@ -55,14 +60,11 @@ function reportPoll() {
 
 reportPoll();
 
-
-
-
 chrome.tabs.onActivated.addListener(function (activeInfo) {
   chrome.tabs.get(activeInfo.tabId, function (tab) {
     console.log(tab.url);
     if (tab.url) {
-      appendStorageArray("urls", tab.url);
+      arrayStorage.append("urls", tab.url);
     }
   });
 });
