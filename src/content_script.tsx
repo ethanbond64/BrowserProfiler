@@ -5,9 +5,9 @@ document.addEventListener("click", (e) => {
   incrementStorageValue("clicks");
 })
 
-document.addEventListener("keypress", (e) => {
+document.addEventListener("keydown", (e) => {
   console.log("YOU PRESSED");
-  incrementStorageValue("keypresses");
+  incrementStorageValue("keydowns");
 });
 
 document.addEventListener("scroll", (e) => {

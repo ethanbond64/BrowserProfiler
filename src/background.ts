@@ -6,13 +6,13 @@ import { ActivityLevel, ProfileLog } from "./profileLog";
 const report = async () => {
   console.log("reporting...")
   let clicks = await getAndClear("clicks");
-  let keypresses = await getAndClear("keypresses");
+  let keydowns = await getAndClear("keydowns");
   let scrolls = await getAndClear("scrolls");
   let urls = await getAndClearArray("urls");
 
-  console.log("reporting... " + clicks + " " + keypresses + " " + scrolls + " " + urls);
+  console.log("reporting... " + clicks + " " + keydowns + " " + scrolls + " " + urls);
 
-  let activityLevel = getActivityLevel(clicks, keypresses, scrolls);
+  let activityLevel = getActivityLevel(clicks, keydowns, scrolls);
 
   let profileLog = new ProfileLog(new Date().toISOString(), activityLevel, urls);
 
