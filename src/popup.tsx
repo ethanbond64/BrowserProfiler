@@ -1,6 +1,8 @@
 import React, { useEffect, useState } from "react";
 import ReactDOM from "react-dom";
-import { getProfileLogs } from "./loggingStorage";
+import ProfileStorage from "./Storage/ProfileStorage";
+
+const profileStorage = new ProfileStorage();
 
 const Popup = () => {
   const [jsonUrl, setJsonUrl] = useState<string>();
@@ -12,7 +14,7 @@ const Popup = () => {
   }, []);
 
   const createJsonFile = async () => {
-    let data = await getProfileLogs();
+    let data = await profileStorage.get();
     let blob = new Blob([JSON.stringify(data)], { type: "octet/stream" })
     let url = URL.createObjectURL(blob);
     setJsonUrl(url);

@@ -1,39 +1,38 @@
 
 import TypedStorage from "./TypedStorage";
 
-export default class ArrayStorage implements TypedStorage<[]> {
+export default class ArrayStorage<T> implements TypedStorage<T[]> {
 
-    private _default: number;
+    constructor() {
 
-    constructor(defaultValue: number = 0) {
-        this._default = defaultValue;
     }
 
-    get(key: string): Promise<[]> {
+    get(key: string): Promise<T[]> {
         return new Promise((resolve, reject) => chrome.storage.local.get([key], (result) => {
-            resolve(result[key] || this._default);
+            resolve(result[key] || []);
         }));
     }
 
-    set(key: string, value: []): void {
+    set(key: string, value: T[]): void {
         chrome.storage.local.set({ [key]: value });
     }
 
-    append(key: string, value: any): void {
+    append(key: string, value: T): void {
         chrome.storage.local.get(key, (result) => {
-            var value = result[key] || this._default;
-            chrome.storage.local.set({ [key]: value++ });
+            var array = result[key] || [];
+            array.push(value);
+            chrome.storage.local.set({ [key]: array });
         });
     }
 
     clear(key: string): void {
-        chrome.storage.local.set({ [key]: this._default });
+        chrome.storage.local.set({ [key]: [] });
     }
 
-    pop(key: string): Promise<[]> {
+    pop(key: string): Promise<T[]> {
         return new Promise((resolve, reject) => chrome.storage.local.get([key], (result) => {
-            let value = result[key] || this._default;
-            chrome.storage.local.set({ [key]: this._default });
+            let value = result[key] || [];
+            chrome.storage.local.set({ [key]: [] });
             resolve(value);
         }));
     }

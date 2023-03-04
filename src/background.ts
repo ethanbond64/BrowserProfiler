@@ -1,13 +1,14 @@
-import { addProfileLog, evaluateProfileLogs } from "./loggingStorage";
-import { ActivityLevel, ProfileLog } from "./profileLog";
+import Profile, { ActivityLevel } from "./Profile";
 import ArrayStorage from "./Storage/ArrayStorage";
 import NumberStorage from "./Storage/NumberStorage";
+import ProfileStorage from "./Storage/ProfileStorage";
 
 const HEARTBEAT = 5;
 const SLEEP = 10;
 
 const numberStorage = new NumberStorage();
 const arrayStorage = new ArrayStorage();
+const profileStorage = new ProfileStorage();
 
 const report = async () => {
 
@@ -15,47 +16,41 @@ const report = async () => {
   let clicks = await numberStorage.pop("clicks");
   let keydowns = await numberStorage.pop("keydowns");
   let scrolls = await numberStorage.pop("scrolls");
-  let urls = await arrayStorage.pop("urls");
+  let urls = await arrayStorage.pop("urls") as string[];
 
   console.log("reporting... " + clicks + " " + keydowns + " " + scrolls + " " + urls);
 
-  let activityLevel = getActivityLevel(clicks, keydowns, scrolls);
+  let activityLevel = Profile.getActivityLevel(clicks, keydowns, scrolls);
 
-  let profileLog = new ProfileLog(new Date().toISOString(), activityLevel, urls);
+  let profile = new Profile(new Date().toISOString(), activityLevel, urls);
 
-  addProfileLog(profileLog);
-};
-
-
-const getActivityLevel = (clicks: number, keys: number, scrolls: number): ActivityLevel => {
-
-  if (clicks > 0 || keys > 0) {
-    return ActivityLevel.Active;
-  }
-
-  if (scrolls > 0) {
-    return ActivityLevel.Passive;
-  }
-
-  return ActivityLevel.Idle;
+  profileStorage.appendProfile(profile);
 };
 
 function reportPoll() {
+
   report();
-  evaluateProfileLogs((profileLogs: ProfileLog[]) => {
-    console.log("evaluating profile logs", profileLogs);
-    if (profileLogs.length < SLEEP) {
+
+  profileStorage.evaluate((profiles: Profile[]) => {
+
+    console.log("evaluating profile logs", profiles);
+
+    //
+    // If we have less than SLEEP logs, then we need to keep polling
+    //
+    if (profiles.length < SLEEP) {
       setTimeout(reportPoll, HEARTBEAT * 1000);
     }
 
-    if (!profileLogs.slice(-SLEEP).every((profileLog: ProfileLog) => {
-      return profileLog.activityLevel === ActivityLevel.Idle;
+    //
+    // If the last SLEEP logs are all idle, then we can stop polling  
+    //
+    if (!profiles.slice(-SLEEP).every((profile: Profile) => {
+      return profile.activityLevel === ActivityLevel.Idle;
     })) {
       setTimeout(reportPoll, HEARTBEAT * 1000);
     }
-
   });
-
 }
 
 reportPoll();
