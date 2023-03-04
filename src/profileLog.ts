@@ -15,6 +15,5 @@ export class ProfileLog {
 export enum ActivityLevel {
     Active = 1,
     Passive,
-    Paused,
     Idle,
 }
