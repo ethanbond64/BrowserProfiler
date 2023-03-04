@@ -20,6 +20,8 @@ export default class Engine {
 
     // start loop
     start() {
+
+        console.log("starting...");
         // set awake
         this.awake = true;
         // do loop
@@ -29,7 +31,10 @@ export default class Engine {
 
     // stop loop
     stop() {
+        console.log("stopping...");
         // set asleep
+
+        // refresh data store
         this.awake = false;
     }
 
