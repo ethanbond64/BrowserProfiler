@@ -17,20 +17,36 @@ const report = async () => {
   let clicks = await numberStorage.pop("clicks");
   let keydowns = await numberStorage.pop("keydowns");
   let scrolls = await numberStorage.pop("scrolls");
-  let urls = await arrayStorage.pop("urls") as string[];
+  let urls = new Set(await arrayStorage.pop("urls") as string[]);
+
+  chrome.tabs.query({ active: true, lastFocusedWindow: true }, tabs => {
+    let url = tabs[0].url;
+    if (url) {
+      urls.add(url);
+    }
+  });
 
   console.log("reporting... " + clicks + " " + keydowns + " " + scrolls + " " + urls);
 
   let activityLevel = Profile.getActivityLevel(clicks, keydowns, scrolls);
 
-  let profile = new Profile(new Date().toISOString(), activityLevel, urls);
+  let profile = new Profile(new Date().toISOString(), activityLevel, Array.from(urls));
 
   profileStorage.appendProfile(profile);
 };
 
 const engine = new Engine(HEARTBEAT, SLEEP, report);
 
-engine.start();
+// engine.start();
+
+chrome.runtime.onMessage.addListener(
+  function (request, sender, sendResponse) {
+    console.log("wake message received");
+    if (request.awake) {
+      engine.start();
+    }
+  }
+);
 
 chrome.tabs.onActivated.addListener(function (activeInfo) {
   chrome.tabs.get(activeInfo.tabId, function (tab) {

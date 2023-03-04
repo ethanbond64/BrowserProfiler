@@ -8,6 +8,7 @@ export default class Engine {
     private profileStorage: ProfileStorage;
     private report: () => void;
     private awake: boolean;
+    private first: boolean;
 
     // constructor
     constructor(heartbeat: number, sleep: number, report: () => void) {
@@ -15,17 +16,20 @@ export default class Engine {
         this.sleep = sleep;
         this.report = report;
         this.profileStorage = new ProfileStorage();
-        this.awake = true;
+        this.awake = false;
+        this.first = false;
     }
 
     // start loop
     start() {
-
-        console.log("starting...");
-        // set awake
-        this.awake = true;
-        // do loop
-        this.loop();
+        if (!this.awake) {
+            console.log("starting...");
+            // set awake
+            this.awake = true;
+            this.first = true;
+            // do loop
+            this.loop();
+        }
     }
 
 
@@ -57,8 +61,9 @@ export default class Engine {
             //
             // If we have less than SLEEP logs, then we need to keep polling
             //
-            if (this.awake && (profiles.length < this.sleep || this.sleepThreshold(profiles))) {
+            if (this.awake && (profiles.length < this.sleep || this.sleepThreshold(profiles || this.first))) {
                 setTimeout(() => this.loop(), this.heartbeat * 1000);
+                this.first = false;
             } else {
                 this.stop();
             }
