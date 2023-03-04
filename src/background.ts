@@ -30,7 +30,7 @@ const getActivityLevel = (clicks: number, keys: number, scrolls: number): Activi
     return ActivityLevel.Passive;
   }
 
-  return ActivityLevel.Paused;
+  return ActivityLevel.Idle;
 };
 
 function reportPoll() {
