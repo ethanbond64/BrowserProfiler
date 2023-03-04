@@ -21,7 +21,7 @@ export default class NumberStorage implements BufferStorage<number> {
     increment(key: string): void {
         chrome.storage.local.get(key, (result) => {
             var value = result[key] || this._default;
-            chrome.storage.local.set({ [key]: value++ });
+            chrome.storage.local.set({ [key]: value + 1 });
         });
     }
 
