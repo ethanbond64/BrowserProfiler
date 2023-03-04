@@ -1,5 +1,5 @@
 import { appendStorageArray, getAndClear, getAndClearArray, getLogAndClear } from "./bufferStorage";
-import { addProfileLog, logProfileLogs } from "./loggingStorage";
+import { addProfileLog } from "./loggingStorage";
 import { ActivityLevel, ProfileLog } from "./profileLog";
 
 
@@ -41,7 +41,7 @@ function reportPoll() {
 reportPoll();
 
 function logPoll() {
-  logProfileLogs();
+  // logProfileLogs();
   setTimeout(logPoll, 1000 * 30);
 }
 

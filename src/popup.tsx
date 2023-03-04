@@ -1,19 +1,22 @@
 import React, { useEffect, useState } from "react";
 import ReactDOM from "react-dom";
+import { getProfileLogs } from "./loggingStorage";
 
 const Popup = () => {
-  const [count, setCount] = useState(0);
-  const [currentURL, setCurrentURL] = useState<string>();
+  const [jsonUrl, setJsonUrl] = useState<string>();
+  const [jsonName, setJsonName] = useState<string>("browserData.json");
+
 
   useEffect(() => {
-    chrome.action.setBadgeText({ text: count.toString() });
-  }, [count]);
-
-  useEffect(() => {
-    chrome.tabs.query({ active: true, currentWindow: true }, function (tabs) {
-      setCurrentURL(tabs[0].url);
-    });
+    createJsonFile();
   }, []);
+
+  const createJsonFile = async () => {
+    let data = await getProfileLogs();
+    let blob = new Blob([JSON.stringify(data)], { type: "octet/stream" })
+    let url = URL.createObjectURL(blob);
+    setJsonUrl(url);
+  };
 
   const changeBackground = () => {
     chrome.tabs.query({ active: true, currentWindow: true }, function (tabs) {
@@ -34,17 +37,8 @@ const Popup = () => {
 
   return (
     <>
-      <ul style={{ minWidth: "700px" }}>
-        <li>Current URL: {currentURL}</li>
-        <li>Current Time: {new Date().toLocaleTimeString()}</li>
-      </ul>
-      <button
-        onClick={() => setCount(count + 1)}
-        style={{ marginRight: "5px" }}
-      >
-        count up
-      </button>
-      <button onClick={changeBackground}>change background</button>
+      <h1>Browser Profiler Data</h1>
+      <a href={jsonUrl} download={jsonName}>Download your data</a>
     </>
   );
 };

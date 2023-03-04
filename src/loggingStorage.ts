@@ -21,11 +21,25 @@ export const getMostRecentProfileLog = async (count: number): Promise<ProfileLog
     });
 };
 
-export const logProfileLogs = async () => {
-    chrome.storage.local.get(PROFILE_LOG).then((result) => {
-        console.log(result);
-        if (result[PROFILE_LOG].length > 100) {
-            chrome.storage.local.set({ [PROFILE_LOG]: [] });
-        }
+
+export const getProfileLogs = async (): Promise<ProfileLog> => {
+    return new Promise((resolve, reject) => {
+        chrome.storage.local.get([PROFILE_LOG], function (result) {
+            if (result[PROFILE_LOG] === undefined) {
+                reject();
+            } else {
+                chrome.storage.local.set({ [PROFILE_LOG]: [] });
+                resolve(result[PROFILE_LOG]);
+            }
+        });
     });
 };
+
+// export const logProfileLogs = async () => {
+//     chrome.storage.local.get(PROFILE_LOG).then((result) => {
+//         console.log(result);
+//         if (result[PROFILE_LOG].length > 100) {
+//             chrome.storage.local.set({ [PROFILE_LOG]: [] });
+//         }
+//     });
+// };
