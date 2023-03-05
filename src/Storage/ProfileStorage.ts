@@ -29,7 +29,7 @@ export default class ProfileStorage extends ArrayStorage<Profile> {
         return new Promise((resolve, reject) => {
             chrome.storage.local.get([ProfileStorage.KEY], function (result) {
                 if (result[ProfileStorage.KEY] === undefined) {
-                    reject();
+                    resolve(fn([]));
                 } else {
                     resolve(fn(result[ProfileStorage.KEY]));
                 }
