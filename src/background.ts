@@ -8,7 +8,7 @@ import ArrayStorage from "./Storage/ArrayStorage";
 // Engine and Engine listener
 //
 const settings = Settings.getSettings();
-const reporter = new Reporter();
+const reporter = new Reporter(settings);
 const engine = new Engine(settings, reporter);
 
 chrome.runtime.onMessage.addListener(

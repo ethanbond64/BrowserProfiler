@@ -1,4 +1,5 @@
 import Profile from "./Profile";
+import Settings from "./Settings";
 import ArrayStorage from "./Storage/ArrayStorage";
 import NumberStorage from "./Storage/NumberStorage";
 import ProfileStorage from "./Storage/ProfileStorage";
@@ -9,13 +10,23 @@ const profileStorage = new ProfileStorage();
 
 export default class Reporter {
 
+    private settings: Settings;
 
+    constructor(settings: Settings) {
+        this.settings = settings;
+    }
 
     async report() {
 
-        let clicks = await numberStorage.pop("clicks");
-        let keydowns = await numberStorage.pop("keydowns");
-        let scrolls = await numberStorage.pop("scrolls");
+        //
+        // TODO use the list of tracked events from settings to pop these
+        // will need some kind of data structure to configre how to translate 
+        // tracked events to activity levels
+        //
+        let clicks = await numberStorage.pop("click");
+        let keydowns = await numberStorage.pop("keydown");
+        let scrolls = await numberStorage.pop("scroll");
+
         let urls = new Set(await arrayStorage.pop("urls") as string[]);
 
         chrome.tabs.query({ active: true }, tabs => {
