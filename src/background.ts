@@ -20,9 +20,8 @@ const report = async () => {
   let urls = new Set(await arrayStorage.pop("urls") as string[]);
 
   chrome.tabs.query({ active: true, lastFocusedWindow: true }, tabs => {
-    let url = tabs[0].url;
-    if (url) {
-      urls.add(url);
+    if (tabs.length > 0 && tabs[0].url) {
+      urls.add(tabs[0].url);
     }
   });
 

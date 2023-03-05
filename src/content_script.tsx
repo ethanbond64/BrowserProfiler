@@ -2,10 +2,23 @@ import NumberStorage from "./Storage/NumberStorage";
 import { executeSafe } from "./Utils";
 
 const numberStorage = new NumberStorage();
+const EXPIRATION = 1000 * 5 * 5;
+
+var localAwake = false;
+
+const resetLocalAwake = () => {
+  localAwake = true;
+  setTimeout(() => {
+    localAwake = false;
+  }, EXPIRATION);
+};
 
 const wakeEngine = () => {
-  console.log("WAKING ENGINE");
-  chrome.runtime.sendMessage({ awake: true });
+  if (!localAwake) {
+    console.log("WAKING ENGINE");
+    chrome.runtime.sendMessage({ awake: true });
+    resetLocalAwake();
+  }
 };
 
 document.addEventListener("click", (e) => {
