@@ -2,9 +2,9 @@ import Settings from "./Settings";
 import NumberStorage from "./Storage/NumberStorage";
 import { executeSafe } from "./Utils";
 
+const settings = Settings.getSettings();
 const numberStorage = new NumberStorage();
-const EXPIRATION = 1000 * 5 * 5;
-
+const EXPIRATION = (settings.getHeartbeat() * settings.getSleep()) / 2;
 
 //
 // Wake engine message logic
@@ -15,7 +15,7 @@ const resetLocalAwake = () => {
   localAwake = true;
   setTimeout(() => {
     localAwake = false;
-  }, EXPIRATION);
+  }, 1000 * EXPIRATION);
 };
 
 const wakeEngine = () => {
@@ -29,7 +29,6 @@ const wakeEngine = () => {
 //
 // Event listeners
 //
-const settings = Settings.getSettings();
 settings.getTrackedEvents().forEach((eventName) => {
   document.addEventListener(eventName, (e) => {
     // console.log("YOU " + eventName.toUpperCase());
@@ -39,28 +38,3 @@ settings.getTrackedEvents().forEach((eventName) => {
     });
   });
 });
-
-// document.addEventListener("click", (e) => {
-//   console.log("YOU CLICKED");
-//   executeSafe(() => {
-//     numberStorage.increment("clicks");
-//     wakeEngine();
-//   });
-// })
-
-// document.addEventListener("keydown", (e) => {
-//   // console.log("YOU PRESSED");
-//   executeSafe(() => {
-//     numberStorage.increment("keydowns");
-//     wakeEngine();
-//   });
-// });
-
-// document.addEventListener("scroll", (e) => {
-//   // console.log("YOU SCROLLED");
-//   executeSafe(() => {
-//     numberStorage.increment("scrolls");
-//     wakeEngine();
-//   });
-// });
-
