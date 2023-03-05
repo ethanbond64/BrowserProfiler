@@ -1,0 +1,19 @@
+replace
+
+"manifest_version": 2,
+
+with 
+
+"manifest_version": 3,
+
+
+
+replace
+
+"service_worker": "js/background.js"
+
+with
+
+"scripts": [
+    "js/background.js"
+]
