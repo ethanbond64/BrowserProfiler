@@ -1,44 +1,15 @@
 import Engine from "./Engine";
-import Profile from "./Profile";
+import Reporter from "./Reporter";
+import Settings from "./Settings";
 import ArrayStorage from "./Storage/ArrayStorage";
-import NumberStorage from "./Storage/NumberStorage";
-import ProfileStorage from "./Storage/ProfileStorage";
-
-const HEARTBEAT = 5;
-const SLEEP = 6;
-
-const numberStorage = new NumberStorage();
-const arrayStorage = new ArrayStorage();
-const profileStorage = new ProfileStorage();
-
-const report = async () => {
-
-  let clicks = await numberStorage.pop("clicks");
-  let keydowns = await numberStorage.pop("keydowns");
-  let scrolls = await numberStorage.pop("scrolls");
-  let urls = new Set(await arrayStorage.pop("urls") as string[]);
-
-  chrome.tabs.query({ active: true }, tabs => {
-    if (tabs.length > 0 && tabs[0].url) {
-
-      urls.add(tabs[0].url);
-
-      console.log("reporting... " + clicks + " " + keydowns + " " + scrolls + " " + urls.size);
-
-      let activityLevel = Profile.getActivityLevel(clicks, keydowns, scrolls);
-
-      let profile = new Profile(new Date().toISOString(), activityLevel, Array.from(urls));
-
-      profileStorage.appendProfile(profile);
-    }
-  });
 
 
-};
-
-const engine = new Engine(HEARTBEAT, SLEEP, report);
-
-// engine.start();
+//
+// Engine and Engine listener
+//
+const settings = Settings.getSettings();
+const reporter = new Reporter();
+const engine = new Engine(settings, reporter);
 
 chrome.runtime.onMessage.addListener(
   function (request, sender, sendResponse) {
@@ -49,6 +20,12 @@ chrome.runtime.onMessage.addListener(
   }
 );
 
+
+//
+// Tab change listener
+//
+const arrayStorage = new ArrayStorage();
+
 chrome.tabs.onActivated.addListener(function (activeInfo) {
   chrome.tabs.get(activeInfo.tabId, function (tab) {
     console.log(tab.url);
@@ -58,8 +35,9 @@ chrome.tabs.onActivated.addListener(function (activeInfo) {
   });
 });
 
+
 //
-// Reinject script on extension update
+// Reinject script on extension update listener
 //
 chrome.runtime.onInstalled.addListener(async () => {
   for (const cs of chrome.runtime.getManifest().content_scripts || []) {

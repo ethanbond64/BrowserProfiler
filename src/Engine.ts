@@ -1,20 +1,25 @@
 import Profile, { ActivityLevel } from "./Profile";
+import Reporter from "./Reporter";
+import Settings from "./Settings";
 import ProfileStorage from "./Storage/ProfileStorage";
 
 export default class Engine {
 
-    private heartbeat: number;
-    private sleep: number;
+    // private heartbeat: number;
+    // private sleep: number;
+    private settings: Settings;
+    private reporter: Reporter;
+
     private profileStorage: ProfileStorage;
-    private report: () => void;
+    // private report: () => void;
     private awake: boolean;
     private first: boolean;
 
     // constructor
-    constructor(heartbeat: number, sleep: number, report: () => void) {
-        this.heartbeat = heartbeat;
-        this.sleep = sleep;
-        this.report = report;
+    constructor(settings: Settings, reporter: Reporter) {
+        this.settings = settings;
+        this.reporter = reporter;
+
         this.profileStorage = new ProfileStorage();
         this.awake = false;
         this.first = false;
@@ -48,7 +53,7 @@ export default class Engine {
         console.log("looping...");
 
         // do work
-        this.report();
+        this.reporter.report();
         // check if awake
 
         // if awake, do loop
@@ -61,8 +66,8 @@ export default class Engine {
             //
             // If we have less than SLEEP logs, then we need to keep polling
             //
-            if (this.awake && (profiles.length < this.sleep || this.sleepThreshold(profiles) || this.first)) {
-                setTimeout(() => this.loop(), this.heartbeat * 1000);
+            if (this.awake && (profiles.length < this.settings.getSleep() || this.sleepThreshold(profiles) || this.first)) {
+                setTimeout(() => this.loop(), this.settings.getHeartbeat() * 1000);
                 this.first = false;
             } else {
                 this.stop();
@@ -71,7 +76,7 @@ export default class Engine {
     }
 
     private sleepThreshold(profiles: Profile[]): boolean {
-        return !profiles.slice(-this.sleep).every((profile: Profile) => {
+        return !profiles.slice(-this.settings.getSleep()).every((profile: Profile) => {
             return profile.activityLevel === ActivityLevel.Idle;
         });
     }
