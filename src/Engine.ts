@@ -61,7 +61,7 @@ export default class Engine {
             //
             // If we have less than SLEEP logs, then we need to keep polling
             //
-            if (this.awake && (profiles.length < this.sleep || this.sleepThreshold(profiles || this.first))) {
+            if (this.awake && (profiles.length < this.sleep || this.sleepThreshold(profiles) || this.first)) {
                 setTimeout(() => this.loop(), this.heartbeat * 1000);
                 this.first = false;
             } else {
