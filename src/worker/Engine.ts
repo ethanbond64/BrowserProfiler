@@ -1,17 +1,20 @@
-import Profile, { ActivityLevel } from "./Profile";
+import Profile, { ActivityLevel } from "../models/Profile";
 import Reporter from "./Reporter";
-import Settings from "./Settings";
-import ProfileStorage from "./Storage/ProfileStorage";
+import Settings from "../models/Settings";
+import ProfileStorage from "../storage/ProfileStorage";
 
 export default class Engine {
 
-    // private heartbeat: number;
-    // private sleep: number;
+    //
+    // Set on construction
+    //
     private settings: Settings;
     private reporter: Reporter;
 
+    //
+    // Set internally
+    //
     private profileStorage: ProfileStorage;
-    // private report: () => void;
     private awake: boolean;
     private first: boolean;
 

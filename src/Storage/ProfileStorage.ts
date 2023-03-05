@@ -1,4 +1,4 @@
-import Profile from "../Profile";
+import Profile from "../models/Profile";
 import ArrayStorage from "./ArrayStorage";
 
 export default class ProfileStorage extends ArrayStorage<Profile> {

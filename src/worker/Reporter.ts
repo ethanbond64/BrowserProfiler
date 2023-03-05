@@ -1,8 +1,8 @@
-import Profile from "./Profile";
-import Settings from "./Settings";
-import ArrayStorage from "./Storage/ArrayStorage";
-import NumberStorage from "./Storage/NumberStorage";
-import ProfileStorage from "./Storage/ProfileStorage";
+import Profile from "../models/Profile";
+import Settings from "../models/Settings";
+import ArrayStorage from "../storage/ArrayStorage";
+import NumberStorage from "../storage/NumberStorage";
+import ProfileStorage from "../storage/ProfileStorage";
 
 const numberStorage = new NumberStorage();
 const arrayStorage = new ArrayStorage();

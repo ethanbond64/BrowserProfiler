@@ -1,5 +1,5 @@
-import Settings from "./Settings";
-import NumberStorage from "./Storage/NumberStorage";
+import Settings from "./models/Settings";
+import NumberStorage from "./storage/NumberStorage";
 import { executeSafe } from "./Utils";
 
 const settings = Settings.getSettings();

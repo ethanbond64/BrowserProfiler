@@ -1,7 +1,7 @@
-import Engine from "./Engine";
-import Reporter from "./Reporter";
-import Settings from "./Settings";
-import ArrayStorage from "./Storage/ArrayStorage";
+import Engine from "./worker/Engine";
+import Reporter from "./worker/Reporter";
+import Settings from "./models/Settings";
+import ArrayStorage from "./storage/ArrayStorage";
 
 
 //

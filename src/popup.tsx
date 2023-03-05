@@ -1,6 +1,6 @@
 import React, { useEffect, useState } from "react";
 import ReactDOM from "react-dom";
-import ProfileStorage from "./Storage/ProfileStorage";
+import ProfileStorage from "./storage/ProfileStorage";
 
 const profileStorage = new ProfileStorage();
 
