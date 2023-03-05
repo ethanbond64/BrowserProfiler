@@ -17,3 +17,12 @@ with
 "scripts": [
     "js/background.js"
 ]
+
+
+replace 
+
+"action": {
+
+with 
+
+"browser_action": {
