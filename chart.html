@@ -1,0 +1,79 @@
+<!DOCTYPE html>
+<html>
+
+<head>
+    <title>Chart.js Example</title>
+    <script src="https://cdn.jsdelivr.net/npm/chart.js"></script>
+</head>
+
+<body>
+    <canvas id="chart" width="800" height="400"></canvas>
+    <script>
+        // Define your data as an array of JSON objects with "x" and "y" members
+
+        const go = async () => {
+
+            const data = await fetch("http://localhost:8000/get/profiles").then((response) => response.json()).then((data) => {
+
+                let cleanData = data["profiles"].map((profile) => {
+                    return {
+                        x: profile["data"]["timestamp"],
+                        y: profile["data"]["activityLevel"]
+                    }
+                });
+
+                chartData(cleanData);
+            });
+        }
+
+        go();
+
+        const chartData = (data) => {
+            // Parse the x values as dates and the y values as numbers
+            const parsedData = data.map(({ x, y }) => ({ x: new Date(x), y: parseInt(y) }));
+
+            // Get the canvas element
+            const canvas = document.getElementById('chart');
+
+            // Create the chart
+            const chart = new Chart(canvas, {
+                type: 'bar',
+                data: {
+                    datasets: [
+                        {
+                            label: 'My Dataset',
+                            data: parsedData,
+                            backgroundColor: 'rgba(255, 99, 132, 0.2)',
+                            borderColor: 'rgba(255, 99, 132, 1)',
+                            borderWidth: 1,
+                        },
+                    ],
+                },
+                options: {
+                    scales: {
+                        x: {
+                            type: 'linear',
+                            title: {
+                                display: true,
+                                text: 'Date',
+                            },
+                        },
+                        y: {
+                            type: 'linear',
+                            title: {
+                                display: true,
+                                text: 'Value',
+                            },
+                            ticks: {
+                                beginAtZero: true,
+                                stepSize: 1,
+                            },
+                        },
+                    },
+                },
+            });
+        }
+    </script>
+</body>
+
+</html>
