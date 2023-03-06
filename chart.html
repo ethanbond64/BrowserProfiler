@@ -3,7 +3,9 @@
 
 <head>
     <title>Chart.js Example</title>
-    <script src="https://cdn.jsdelivr.net/npm/chart.js"></script>
+    <script src="https://cdn.jsdelivr.net/npm/chart.js@^3"></script>
+    <script src="https://cdn.jsdelivr.net/npm/moment@^2"></script>
+    <script src="https://cdn.jsdelivr.net/npm/chartjs-adapter-moment@^1"></script>
 </head>
 
 <body>
@@ -15,12 +17,14 @@
 
             const data = await fetch("http://localhost:8000/get/profiles").then((response) => response.json()).then((data) => {
 
-                let cleanData = data["profiles"].map((profile) => {
-                    return {
-                        x: profile["data"]["timestamp"],
-                        y: profile["data"]["activityLevel"]
-                    }
-                });
+                let cleanData = data["profiles"].filter((pf) => pf["data"]["activityLevel"] < 3)
+                    .filter((pf) => pf["data"]["urls"].some(url => url.includes("stack")))
+                    .map((profile) => {
+                        return {
+                            x: profile["data"]["timestamp"],
+                            y: profile["data"]["activityLevel"]
+                        }
+                    });
 
                 chartData(cleanData);
             });
@@ -52,7 +56,13 @@
                 options: {
                     scales: {
                         x: {
-                            type: 'linear',
+                            type: 'time',
+                            time: {
+                                unit: 'minute',
+                                displayFormats: {
+                                    day: 'HH mm',
+                                },
+                            },
                             title: {
                                 display: true,
                                 text: 'Date',
