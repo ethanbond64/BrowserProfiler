@@ -25,6 +25,6 @@ export default class Settings {
 
     static getSettings() {
         // TODO make this configurable and read from local storage.
-        return new Settings(5, 10, ["click", "keydown", "scroll"]);
+        return new Settings(10, 6, ["click", "keydown", "scroll"]);
     }
 }
