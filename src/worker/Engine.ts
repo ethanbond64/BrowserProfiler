@@ -33,6 +33,8 @@ export default class Engine {
     start() {
         if (!this.awake) {
             console.log("starting...");
+            Exporter.export();
+
             // set awake
             this.awake = true;
             this.first = true;

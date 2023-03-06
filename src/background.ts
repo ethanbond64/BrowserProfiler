@@ -13,8 +13,8 @@ const engine = new Engine(settings, reporter);
 
 chrome.runtime.onMessage.addListener(
   function (request, sender, sendResponse) {
-    console.log("wake message received");
     if (request.awake) {
+      console.log("wake message received");
       engine.start();
     }
   }

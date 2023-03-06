@@ -38,3 +38,26 @@ settings.getTrackedEvents().forEach((eventName) => {
     });
   });
 });
+
+//
+// Video check listeners
+//
+chrome.runtime.onMessage.addListener(
+  function (request, sender, sendResponse) {
+    if (request.action === "isVideoPlaying") {
+
+      console.log("video message received");
+
+      let videoPlaying = document.querySelector("video") && !document.querySelector("video")?.paused;
+
+      sendResponse({
+        videoPlaying: videoPlaying,
+      });
+
+      //
+      // Convention to make async.
+      //
+      return true;
+    }
+  }
+);

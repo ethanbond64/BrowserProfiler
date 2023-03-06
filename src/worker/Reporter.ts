@@ -29,19 +29,42 @@ export default class Reporter {
 
         let urls = new Set(await arrayStorage.pop("urls") as string[]);
 
-        chrome.tabs.query({ active: true }, tabs => {
-            if (tabs.length > 0 && tabs[0].url) {
+        chrome.tabs.query({ active: true, currentWindow: true }, tabs => {
+            if (tabs.length > 0 && tabs[0].url && tabs[0].id && !tabs[0].url.startsWith("chrome://")) {
 
                 urls.add(tabs[0].url);
 
-                console.log("reporting... " + clicks + " " + keydowns + " " + scrolls + " " + urls.size);
+                //
+                // Check if video playing TODO chaining this is a mess
+                //
+                try {
+                    chrome.tabs.sendMessage(tabs[0].id, { action: "isVideoPlaying" }, (response) => {
 
-                let activityLevel = Profile.getActivityLevel(clicks, keydowns, scrolls);
+                        console.log("video playing: " + JSON.stringify(response));
 
-                let profile = new Profile(new Date().toISOString(), activityLevel, Array.from(urls));
+                        // TODO adding to scrolls to keep concept of video playing out of activity resolver for now
+                        if (response && response.videoPlaying) {
+                            scrolls++;
+                        }
 
-                profileStorage.appendProfile(profile);
+                        this.putProfile(clicks, keydowns, scrolls, urls);
+                    });
+                } catch (e) {
+                    this.putProfile(clicks, keydowns, scrolls, urls);
+                }
+            } else {
+                this.putProfile(clicks, keydowns, scrolls, urls);
             }
         });
     };
+
+    private putProfile(clicks: number, keydowns: number, scrolls: number, urls: Set<string>) {
+        console.log("reporting... " + clicks + " " + keydowns + " " + scrolls + " " + urls.size);
+
+        let activityLevel = Profile.getActivityLevel(clicks, keydowns, scrolls);
+
+        let profile = new Profile(new Date().toISOString(), activityLevel, Array.from(urls));
+
+        profileStorage.appendProfile(profile);
+    }
 }
