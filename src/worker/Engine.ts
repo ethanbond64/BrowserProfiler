@@ -2,6 +2,7 @@ import Profile, { ActivityLevel } from "../models/Profile";
 import Reporter from "./Reporter";
 import Settings from "../models/Settings";
 import ProfileStorage from "../storage/ProfileStorage";
+import Exporter from "./Exporter";
 
 export default class Engine {
 
@@ -44,9 +45,7 @@ export default class Engine {
     // stop loop
     stop() {
         console.log("stopping...");
-        // set asleep
-
-        // refresh data store
+        Exporter.export();
         this.awake = false;
     }
 
