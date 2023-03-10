@@ -1,3 +1,4 @@
+import "./styles/Popup.css";
 import React, { useEffect, useState } from "react";
 import ReactDOM from "react-dom";
 import ProfileStorage from "./storage/ProfileStorage";
@@ -22,7 +23,7 @@ const Popup = () => {
 
   return (
     <>
-      <h1>Browser Profiler Data</h1>
+      <h1 className="underline text-blue-500">Browser Profiler Data</h1>
       <a href={jsonUrl} download={jsonName}>Download your data</a>
     </>
   );
