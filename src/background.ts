@@ -7,18 +7,26 @@ import ArrayStorage from "./storage/ArrayStorage";
 //
 // Engine and Engine listener
 //
-const settings = Settings.getSettings();
-const reporter = new Reporter(settings);
-const engine = new Engine(settings, reporter);
+Settings.getSettings((settings: Settings) => {
 
-chrome.runtime.onMessage.addListener(
-  function (request, sender, sendResponse) {
-    if (request.awake) {
-      console.log("wake message received");
-      engine.start();
+  //
+  // Construct engine and reporter from settings
+  //
+  const reporter = new Reporter(settings);
+  const engine = new Engine(settings, reporter);
+
+  //
+  // Start engine listener
+  //
+  chrome.runtime.onMessage.addListener(
+    function (request, sender, sendResponse) {
+      if (request.awake) {
+        console.log("wake message received");
+        engine.start();
+      }
     }
-  }
-);
+  );
+});
 
 
 //

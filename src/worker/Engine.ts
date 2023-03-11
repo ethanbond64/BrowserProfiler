@@ -33,7 +33,10 @@ export default class Engine {
     start() {
         if (!this.awake) {
             console.log("starting...");
-            Exporter.export();
+
+            if (this.settings.getSyncMode()) {
+                Exporter.export();
+            }
 
             // set awake
             this.awake = true;
@@ -47,7 +50,11 @@ export default class Engine {
     // stop loop
     stop() {
         console.log("stopping...");
-        Exporter.export();
+
+        if (this.settings.getSyncMode()) {
+            Exporter.export();
+        }
+
         this.awake = false;
     }
 
