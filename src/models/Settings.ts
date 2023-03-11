@@ -25,21 +25,43 @@ export default class Settings {
         return this.heartbeat;
     }
 
+    setHeartbeat(heartbeat: number) {
+        this.heartbeat = heartbeat;
+    }
+
     getSleep() {
         return this.sleep;
+    }
+
+    setSleep(sleep: number) {
+        this.sleep = sleep;
     }
 
     getTrackedEvents() {
         return this.trackedEvents;
     }
 
+    setTrackedEvents(trackedEvents: string[]) {
+        this.trackedEvents = trackedEvents;
+    }
+
     getSyncMode() {
         return this.syncMode;
     }
 
+    setSyncMode(syncMode: boolean) {
+        this.syncMode = syncMode;
+    }
+
+
     getSyncUrl() {
         return this.syncUrl;
     }
+
+    setSyncUrl(syncUrl: string) {
+        this.syncUrl = syncUrl;
+    }
+
 
     save() {
         chrome.storage.local.set({ settings: this });
@@ -54,7 +76,7 @@ export default class Settings {
             if (result.settings) {
                 fn(Settings.fromJson(result.settings));
             } else {
-                let settings = fn(Settings.getDefaultSettings().save());
+                fn(Settings.getDefaultSettings().save());
             }
         });
     }

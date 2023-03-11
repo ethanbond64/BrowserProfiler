@@ -1,12 +1,19 @@
 import React from "react";
 import Settings from "../models/Settings";
 
-export const SettingsView = (props: any) => {
+export const SettingsView = (props: { settings: Settings, setSettings: any }) => {
 
 
     const updateSettings = (newSettings: Settings) => {
         newSettings.save();
         props.setSettings(newSettings);
+    };
+
+    const updateUrl = (event: any) => {
+        let newUrl = event.target.value;
+        let newSettings = props.settings;
+        newSettings.setSyncUrl(newUrl);
+        updateSettings(newSettings);
     };
 
     return (
@@ -27,6 +34,8 @@ export const SettingsView = (props: any) => {
                             htmlFor="flexSwitchCheckDefault">
                             Default switch checkbox input
                         </label>
+
+                        <input type="text" name="url" id="url" onBlur={updateUrl} defaultValue={props.settings?.getSyncUrl()} />
                     </div>
                 </div>
 
