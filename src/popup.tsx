@@ -2,13 +2,13 @@ import "./styles/Popup.css";
 import React, { useEffect, useState } from "react";
 import ReactDOM from "react-dom";
 import ProfileStorage from "./storage/ProfileStorage";
+import { DownloadView } from "./components/DownloadView";
 
 const profileStorage = new ProfileStorage();
 
 const Popup = () => {
-  const [jsonUrl, setJsonUrl] = useState<string>();
-  const [jsonName, setJsonName] = useState<string>("browserData.json");
 
+  const [recordCount, setRecordCount] = useState<number>(0);
 
   useEffect(() => {
     createJsonFile();
@@ -16,16 +16,15 @@ const Popup = () => {
 
   const createJsonFile = async () => {
     let data = await profileStorage.get();
-    let blob = new Blob([JSON.stringify(data)], { type: "octet/stream" })
-    let url = URL.createObjectURL(blob);
-    setJsonUrl(url);
+    setRecordCount(data.length);
   };
 
   return (
-    <>
+    <div className="container w-48 h-64 rounded-lg bg-white">
       <h1 className="underline text-blue-500">Browser Profiler Data</h1>
-      <a href={jsonUrl} download={jsonName}>Download your data</a>
-    </>
+      <p className="text-gray-500">Number of Profiles: {recordCount}</p>
+      <DownloadView recordCount={recordCount} />
+    </div>
   );
 };
 
